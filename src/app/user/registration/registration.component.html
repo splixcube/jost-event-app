@@ -1,0 +1,57 @@
+<div class="header">
+  <img  height="50%" src="../../../assets/Josh-logo_f.png" alt="">
+</div>
+<div class="container mt-3">
+  <div class="row mx-auto text-center" *ngIf="step==1">
+    <div class="col-12">
+
+      <div>
+        <strong style="font-size:20px">Welcome to JOSH </strong>
+        <p class="text-grey">Please enter your Employee ID to register</p>
+      </div>
+      <br>
+      <form [formGroup]="registrationForm">
+        <div class="mt-2" *ngIf="registrationPage">
+          <input  type="text" formControlName="EmployeeCode" name="EmployeeCode"
+            class="form-control inp" placeholder="Enter Your Employee ID">
+          <button  [disabled]="!registrationForm.valid" class="btn rounded submit-btn my-4 w-100" (click)="sendOtp()"
+            >
+           <b> REGISTER </b>
+          </button>
+          <p class="text-center px-4">
+            <small class="text-grey">You will get OTP on your registered mobile number to verify</small>
+          </p>
+        </div>
+       <!--  <div class="row mx-auto  my-4" *ngIf="!registrationPage">
+          <ng-container >
+            <div class="form-gorup my-2">
+              <code-input [codeLength]="4" (codeChanged)="onCodeChanged($event)"
+                (codeCompleted)="onCodeCompleted($event)">
+              </code-input>
+            </div>
+            <button  class="btn submit-btn my-4" (click)="verifyOtp()">
+              <b> VERIFY </b>
+            </button>
+            <p class="text-center px-4">
+              <small class="text-light">You will get OTP on your registered mobile number to verify</small>
+            </p>
+          </ng-container>
+        </div> -->
+      </form>
+    </div>
+  </div>
+
+  <div class="row mx-auto" *ngIf="step==2">
+    <div class="col-12 text-center">
+      <div class="my-3 text-center">
+        <h4><b> Thank you  </b> </h4>
+         <p>You have successfully registered.</p>
+      </div>
+      <div class="my-3 text-center">
+         <p>You have opted for below {{Disciplines.length}} Sport/s as per our records.</p>
+      </div>
+      <h5 *ngFor="let item of Disciplines"> <b>{{item}}</b> </h5>
+    </div>
+  </div>
+</div>
+

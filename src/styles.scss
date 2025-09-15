@@ -1,0 +1,108 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap');
+
+
+body {
+  font-family: 'Roboto', sans-serif !important;
+}
+
+
+
+.inp {
+  border: solid 1px lightblue;
+  outline: none !important;
+  border-radius: 15px;
+  outline: none !important;
+
+  ::-moz-focus-inner {
+    outline: none !important;
+  }
+}
+
+.outline-none {
+  border:  none !important;
+  outline: none !important;
+  ::-moz-focus-inner {
+    outline: none !important;
+    border:  none ;
+  }
+}
+
+
+
+.p-datatable .p-datatable-thead > tr > th , .bg-table {
+  color: white !important;
+  background: #104d8a !important;
+}
+
+tr {
+  outline: none !important;
+  font-weight: 600;
+}
+
+
+
+.btn-primary {
+  color: white !important;
+  background: #104d8a !important;
+  border: solid 1px #104d8a !important;
+  border-radius: 15px;
+  font-size: 12px !important;
+  min-width: 70px !important;
+}
+
+.btn {
+  font-size: 13px !important;
+}
+
+
+.p-datatable .p-datatable-header {
+  background:none !important;
+  border:unset !important;
+}
+
+
+.p-datatable-table {
+    font-size: 14px;
+}
+
+
+/* width */
+::-webkit-scrollbar {
+  width: 10px;
+  height:10px
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 2px rgb(205, 205, 205);
+  border-radius: 10px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #104d8a;
+  border-radius: 15px;
+}
+
+.p-column-filter-menu-button:hover {
+  color: #ffffff !important;
+  border-color: transparent !important;
+  background: #104d8a !important;
+}
+
+.p-sortable-column-icon , .p-column-filter-menu-button {
+  color: #ffffff !important;
+}
+
+
+.p-button {
+  color: #ffffff !important;
+  border-color: transparent !important;
+  background: #104d8a !important;
+}
+
+
+.p-column-filter-menu-button.p-column-filter-menu-button-active, .p-column-filter-menu-button.p-column-filter-menu-button-active:hover {
+  background: #104d8a !important;
+  border:solid 1px #ffffff ;
+}

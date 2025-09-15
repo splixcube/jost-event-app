@@ -1,0 +1,78 @@
+.registered {
+  background-color: orange !important;
+  color: white;
+  padding: 0.3rem;
+  border-radius: 6px;
+}
+
+.verified {
+  background-color: green !important;
+  color: white;
+  padding: 0.3rem;
+  border-radius: 6px;
+}
+
+.pending {
+  background-color: black !important;
+  color: white;
+  padding: 0.3rem;
+  border-radius: 6px;
+}
+
+:host ::ng-deep .p-button {
+  margin: 0 .5rem 0 0;
+  min-width: 10rem;
+}
+
+p {
+  margin: 0;
+}
+
+.confirmation-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+:host ::ng-deep .p-dialog .p-button {
+  min-width: 6rem;
+}
+
+
+.w-100px {
+  width: 100px !important;
+}
+
+
+@media only screen and (min-width: 768px) {
+  .grid-md {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+
+  .justify-content-end-md {
+    justify-content: end;
+  }
+
+}
+
+@media only screen and (max-width: 767px) {
+  .grid-sm {
+    display: flex;
+    flex-direction: column;
+  }
+
+
+  .mt-sm-2 {
+    margin-top: 2rem !important;
+  }
+
+}
+
+
+
+
+
+
+

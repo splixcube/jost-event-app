@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "eventsdatasheetapp": {
+      "hosting": {
+        "event-datasheet-app": [
+          "eventsdatasheetapp"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "eventsdatasheetapp"
+  }
+}

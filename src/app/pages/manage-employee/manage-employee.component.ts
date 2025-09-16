@@ -124,10 +124,9 @@ export class ManageEmployeeComponent {
         /* save data */
         const data: any = XLSX.utils.sheet_to_json(ws); // to get 2d array pass 2nd parameter as object {header: 1}
        
-        if (
-          JSON.stringify(Object.keys(data[0]))
-        ) {
+        if (data && data.length > 0 && data[0]) {
           let excelData = data.map((item: any) => {
+            console.log(item);
             return {
               city: this.cityId,
               registered: false,
@@ -149,9 +148,9 @@ export class ManageEmployeeComponent {
              UserCity: item.City || item['UserCity']  || '',
              State: item.State || '',
              Region: item.Region || '',
-             AppliedDate: item.AppliedDate || '',
+             AppliedDate: this.formatDateString(item.AppliedDate, 'iso') || '',
              Status: item.Status || '',
-             StatusOn: item.StatusOn || '',
+             StatusOn: this.formatDateString(item.StatusOn, 'iso') || '',
             };
           });
           console.log(excelData);
@@ -350,5 +349,136 @@ saveAsExcelFile(buffer: any, fileName: string): void {
         type: EXCEL_TYPE
     });
     FileSaver.saveAs(data, fileName + '_export_' + new Date().getTime() + EXCEL_EXTENSION);
+}
+
+formatDateString(dateTimeString:any, format = 'default') {
+  console.log('Input dateTimeString:', dateTimeString, 'Type:', typeof dateTimeString, 'Format:', format);
+  
+  // Return empty string if no date provided
+  if (!dateTimeString) {
+    return '';
+  }
+  
+  let date: Date;
+  
+  // Check if it's an Excel serial number (numeric)
+  if (typeof dateTimeString === 'number') {
+    // Excel date serial number - Excel's epoch is 1900-01-01
+    // But Excel incorrectly treats 1900 as a leap year, so we need to adjust
+    const excelEpoch = new Date(1900, 0, 1); // January 1, 1900
+    const days = Math.floor(dateTimeString);
+    const time = (dateTimeString - days) * 24; // Convert decimal part to hours
+    
+    // Excel incorrectly counts 1900 as leap year, so subtract 1 if date > 59
+    const adjustedDays = dateTimeString > 59 ? days - 1 : days;
+    
+    date = new Date(excelEpoch.getTime() + (adjustedDays - 2) * 24 * 60 * 60 * 1000);
+    
+    // Add the time component with proper precision
+    const hours = Math.floor(time);
+    const minutes = Math.floor((time - hours) * 60);
+    const seconds = Math.floor(((time - hours) * 60 - minutes) * 60);
+    const milliseconds = Math.floor((((time - hours) * 60 - minutes) * 60 - seconds) * 1000);
+    
+    date.setHours(hours, minutes, seconds, milliseconds);
+  } else if (typeof dateTimeString === 'string') {
+    // Handle string format "dd-mm-yyyy hh:mm"
+    if (dateTimeString.includes(' ') && dateTimeString.includes('-')) {
+      const [datePart, timePart] = dateTimeString.split(' ');
+      const [day, month, year] = datePart.split('-');
+      const timeComponents = timePart.split(':');
+      const hours = parseInt(timeComponents[0]) || 0;
+      const minutes = parseInt(timeComponents[1]) || 0;
+      const seconds = parseInt(timeComponents[2]) || 0;
+      
+      // Create Date object (month is 0-indexed)
+      date = new Date(parseInt(year), parseInt(month) - 1, parseInt(day), hours, minutes, seconds);
+    } else {
+      // Try to parse as regular date string
+      date = new Date(dateTimeString);
+    }
+  } else {
+    // Fallback to current date
+    date = new Date();
+  }
+  
+  // Check if date is valid
+  if (isNaN(date.getTime())) {
+    console.warn('Invalid date:', dateTimeString);
+    return '';
+  }
+  console.log(date);
+  // Add 1 day to the date
+  if(typeof dateTimeString ==='number') {
+    date.setDate(date.getDate() + 1);
+  }
+ // date.setDate(date.getDate() + 1);
+  
+  // Format options
+  switch (format.toLowerCase()) {
+    case 'iso':
+      const isoString = date.toISOString();
+      console.log('Original date:', dateTimeString, '-> Converted to ISO:', isoString);
+      console.log('Time components - Hours:', date.getHours(), 'Minutes:', date.getMinutes(), 'Seconds:', date.getSeconds());
+      return isoString;
+    
+    case 'us':
+      return date.toLocaleDateString('en-US') + ' ' + date.toLocaleTimeString('en-US');
+    
+    case 'uk':
+      return date.toLocaleDateString('en-GB') + ' ' + date.toLocaleTimeString('en-GB');
+    
+    case 'short':
+      return date.toLocaleDateString('en-US', { 
+        month: 'short', 
+        day: 'numeric', 
+        year: 'numeric' 
+      });
+    
+    case 'long':
+      return date.toLocaleDateString('en-US', { 
+        weekday: 'long',
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit'
+      });
+    
+    case 'time':
+      return date.toLocaleTimeString('en-US', { 
+        hour: '2-digit', 
+        minute: '2-digit', 
+        second: '2-digit' 
+      });
+    
+    case 'date':
+      return date.toLocaleDateString('en-US');
+    
+    case 'yyyy-mm-dd':
+      return date.toISOString().split('T')[0];
+    
+    case 'dd/mm/yyyy':
+      const dd = String(date.getDate()).padStart(2, '0');
+      const mm = String(date.getMonth() + 1).padStart(2, '0');
+      const yyyy = date.getFullYear();
+      return `${dd}/${mm}/${yyyy}`;
+    
+    case 'custom':
+      // Custom format: "October 29, 2024 at 4:48 PM"
+      return date.toLocaleDateString('en-US', { 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric' 
+      }) + ' at ' + date.toLocaleTimeString('en-US', { 
+        hour: 'numeric', 
+        minute: '2-digit',
+        hour12: true 
+      });
+    
+    default:
+      return date.toString();
+  }
 }
 }

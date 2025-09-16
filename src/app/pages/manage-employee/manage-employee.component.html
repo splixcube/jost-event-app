@@ -111,10 +111,11 @@
         <td>
         {{rowIndex + 1}}
         </td>
-        <td class="text-center d-flex">
-          <button *ngIf="!rowData.verified && rowData.registered" class="btn btn-primary mx-1"
+        <td class="text-center">
+          <div class="d-flex">
+          <button *ngIf="!rowData.verified && rowData.registered" class="btn btn-primary me-1"
             (click)="verifyOTP(rowData)">Attend</button>
-          <button *ngIf="!rowData.registered" class="btn btn-primary mx-1" (click)="register(rowData)">Register</button>
+          <button *ngIf="!rowData.registered" class="btn btn-primary me-1" (click)="register(rowData)">Register</button>
           <button class="btn btn-primary" (click)="edit(rowData)">Edit</button>
 
           <button class="btn btn-danger mx-1 text-center"  *ngIf="checkDeletePermision !=='true'"
@@ -126,6 +127,7 @@
               <path fill-rule="evenodd"
                 d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z" />
             </svg></button>
+            </div>
         </td>
         <td>
           <span class="verified w-100px" *ngIf="rowData.registered && rowData.verified">{{'Attended'}}</span>
@@ -136,8 +138,14 @@
         <ng-container *ngFor="let col of columns;let i=index">
 
           <td *ngIf="!col?.hide">
-            <ng-container *ngIf="col.field!='registered' && col.field!='verified' ">
+            <ng-container *ngIf="col.field!='registered' && col.field!='verified' && col.field!='AppliedDate' && col.field!='StatusOn' ">
               {{rowData[col.field]}}
+            </ng-container>
+            <ng-container *ngIf="col.field=='AppliedDate'">
+              {{rowData[col.field] | date:'dd/MM/yyyy'}}
+            </ng-container>
+            <ng-container *ngIf="col.field=='StatusOn'">
+              {{rowData[col.field] | date:'dd/MM/yyyy'}}
             </ng-container>
             <ng-container *ngIf="col.field=='verified'">
               {{rowData[col.field] ? 'Yes' : 'No'}}

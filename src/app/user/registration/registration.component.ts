@@ -48,7 +48,8 @@ export class RegistrationComponent {
         });
         return
       }
-      this.registrationPage=false
+
+      this.registrationPage= false;
       let obj: any = {}
       obj['registrationCode'] = Math.floor(Math.random() * 9000) + 1000;
       this.db.collection("employees").doc(this.employeeData.id).update(obj)

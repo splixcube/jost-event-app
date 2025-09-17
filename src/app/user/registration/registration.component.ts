@@ -14,7 +14,7 @@ export class RegistrationComponent {
   registrationForm: any
   employeeData: any = null
   OTP:any = null
-  Disciplines:any[]=[]
+  SportsNameArray:any[]=[]
   registrationPage=true;
   constructor(public fb: FormBuilder, public db: AngularFirestore,
     private messageService: MessageService,
@@ -71,6 +71,7 @@ export class RegistrationComponent {
         .get()
         .toPromise()
     )?.data();
+    console.log(empData,"dta")
     if (empData['registrationCode'].toString() == this.OTP?.toString()) {
       (
         await this.db
@@ -85,11 +86,11 @@ export class RegistrationComponent {
           .toPromise()
       )?.docs.forEach(async (doc) => {
         let docData :any= doc.data()
-        this.Disciplines.push(docData?.Discipline)
-        await this.db
+        this.SportsNameArray.push(docData?.SportName)
+         await this.db
           .collection('employees')
           .doc(doc.id)
-          .update({ registered: true });
+          .update({ registered: true }); 
       });
       this.step = 2
 

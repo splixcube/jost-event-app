@@ -7,7 +7,8 @@
 
       <div>
         <strong style="font-size:20px">Welcome to JOSH </strong>
-        <p class="text-grey">Please enter your Employee ID to register</p>
+        <p *ngIf="registrationPage" class="text-grey">Please enter your Employee ID to register</p>
+        <p *ngIf="!registrationPage" class="text-grey">Please enter the OTP to register</p>
       </div>
       <br>
       <form [formGroup]="registrationForm">

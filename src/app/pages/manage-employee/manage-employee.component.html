@@ -113,6 +113,8 @@
         </td>
         <td class="text-center">
           <div class="d-flex">
+             <button *ngIf="rowData.verified && rowData.registered && !rowData.played" class="btn btn-warning me-1"
+            (click)="played(rowData)">Played</button>
           <button *ngIf="!rowData.verified && rowData.registered" class="btn btn-primary me-1"
             (click)="verifyOTP(rowData)">Attend</button>
           <button *ngIf="!rowData.registered" class="btn btn-primary me-1" (click)="register(rowData)">Register</button>
@@ -130,7 +132,8 @@
             </div>
         </td>
         <td>
-          <span class="verified w-100px" *ngIf="rowData.registered && rowData.verified">{{'Attended'}}</span>
+          <span class="played w-100px" *ngIf="rowData.registered && rowData.verified && rowData.played">{{'Played'}}</span>
+          <span class="verified w-100px" *ngIf="rowData.registered && rowData.verified && !rowData.played">{{'Attended'}}</span>
           <span class="registered w-100px" *ngIf="rowData.registered && !rowData.verified">{{'Registered'}}</span>
           <span class="pending w-100px" *ngIf="!rowData.registered && !rowData.verified">{{'Pending'}}</span>
         </td>

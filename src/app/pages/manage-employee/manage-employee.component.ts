@@ -205,7 +205,9 @@ export class ManageEmployeeComponent {
     }
     resolve();
   }
-
+played(data:any){
+ this.db.collection('employees').doc(data.id).update({ played: true });
+}
   verify(id: any) {
     // code to verify otp and call this function
     this.db.collection('employees').doc(id).update({ verified: true });
@@ -307,6 +309,18 @@ export class ManageEmployeeComponent {
      if(this.selectedEmployees?.length>0) {
       filteredData=table.selection.map((item:any)=>{
         let obj:any={}
+         if(item.registered && item.verified && item.played){
+             obj['status']='Played'
+          }
+            if(item.registered && item.verified && !item.played){
+               obj['status']='Attended'
+          }
+            if(item.registered && !item.verified){
+             obj['status']='Registered'
+          }
+            if(!item.registered && !item.verified){
+               obj['status']='Pending'
+          }
         this.exportColumns.forEach((column)=>{
           obj[column.field]=item[column.field]
         })
@@ -318,6 +332,21 @@ export class ManageEmployeeComponent {
         console.log(item);
         let obj:any={}
         this.exportColumns.forEach((column)=>{
+          //add new field
+          
+          if(item.registered && item.verified && item.played){
+             obj['status']='Played'
+          }
+            if(item.registered && item.verified && !item.played){
+               obj['status']='Attended'
+          }
+            if(item.registered && !item.verified){
+             obj['status']='Registered'
+          }
+            if(!item.registered && !item.verified){
+               obj['status']='Pending'
+          }
+
           if(column.field=='registered' || column.field=='verified' ) {
             obj[column.field]=item[column.field] ? 'Yes' : 'No'
           }

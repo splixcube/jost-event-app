@@ -12,7 +12,7 @@
 
         <input [ngClass]="{'error': getControl('EmployeeCode').invalid && getControl('EmployeeCode').touched}" autocomplete="off" placeholder="Employee Code" class="form-control" type="text"
           formControlName="EmployeeCode" id="EmployeeCode">
-        <label for="EmployeeCode">Employee Code</label>
+        <label for="EmployeeCode">Employee Code <span class="text-danger">*</span> </label>
       </div>
     </div>
     <div class="col-md-6 my-2">
@@ -20,13 +20,13 @@
 
         <input [ngClass]="{'error': getControl('EmployeeName').invalid && getControl('EmployeeName').touched}" autocomplete="off" id="EmployeeName" placeholder="Employee Name" class="form-control" type="text"
           formControlName="EmployeeName">
-        <label for="EmployeeName">Employee Name</label>
+        <label for="EmployeeName">Employee Name <span class="text-danger">*</span></label>
       </div>
     </div>
     <div class="col-md-6 my-2">
       <div  class="form-floating">
         <input [ngClass]="{'error': getControl('MobileNo').invalid && getControl('MobileNo').touched}"   autocomplete="off" id="MobileNo" placeholder="Mobile No." class="form-control " type="number"
-          formControlName="MobileNo"> <label for="MobileNo">Mobile no.</label>
+          formControlName="MobileNo"> <label for="MobileNo">Mobile no.<span class="text-danger">*</span></label>
       </div>
     </div>
      <div class="col-md-6 my-2">
@@ -42,7 +42,7 @@
 
         <input [ngClass]="{'error': getControl('SportName').invalid && getControl('SportName').touched}" autocomplete="off" id="SportName" placeholder="Sport Name" class="form-control " type="text"
           formControlName="SportName">
-        <label for="SportName">Sport Name</label>
+        <label for="SportName">Sport Name <span class="text-danger">*</span></label>
       </div>
     </div>
 <!--     <div class="col-md-6 my-2">
@@ -55,10 +55,35 @@
     </div> -->
     <div class="col-md-6 my-2">
       <div class="form-floating">
-        <input [ngClass]="{'error': getControl('SportType').invalid && getControl('SportType').touched}" autocomplete="off" id="SportType" placeholder="Sport Type" class="form-control " type="text"
-          formControlName="SportType">
+       <!--  <input [ngClass]="{'error': getControl('SportType').invalid && getControl('SportType').touched}" autocomplete="off" id="SportType" placeholder="Sport Type" class="form-control " type="text"
+          formControlName="SportType"> -->
 
-        <label for="SportType">Sport Type</label>
+          <select  formControlName="SportType" class="form-control form-select px-2 p-0"
+          [ngClass]="{'error': getControl('SportType').invalid && getControl('SportType').touched}"
+          id="SportType">
+<option value="" disabled selected>Select Sport Type</option>
+            <option value="Badminton Men" >Badminton Men</option>
+<option value="Badminton Women" >Badminton Women</option>
+<option value="Badminton 40+" >Badminton 40+</option>
+<option value="Carrom" >Carrom</option>
+<option value="Chess" >Chess</option>
+<option value="Cricket" >Cricket</option>
+<option value="Dart" >Dart</option>
+<option value="Lagori Men" >Lagori Men</option>
+<option value="Lagori Women" >Lagori Women</option>
+<option value="Net Cricket" >Net Cricket</option>
+<option value="Rink Football" >Rink Football</option>
+<option value="Slow Cycling Men" >Slow Cycling Men</option>
+<option value="Slow Cycling Women" >Slow Cycling Women</option>
+<option value="Table Tennis Men" >Table Tennis Men</option>
+<option value="Table Tennis 40+" >Table Tennis 40+</option>
+<option value="Track & Field Men" >Track & Field Men</option>
+<option value="Track & Field Women" >Track & Field Women</option>
+<option value="Track & Field 40+" >Track & Field 40+</option>
+<option value="Volleyball" >Volleyball</option>
+          </select>
+
+     <!--    <label for="SportType">Sport Type</label> -->
       </div>
     </div>
     <div class="col-md-6 my-2">
@@ -82,7 +107,7 @@
         <input [ngClass]="{'error': getControl('JerseySize').invalid && getControl('JerseySize').touched}" autocomplete="off" id="JerseySize" placeholder="Jersey Size" class="form-control " type="text"
           formControlName="JerseySize">
 
-        <label for="JerseySize">Jersey Size</label>
+        <label for="JerseySize">Jersey Size <span class="text-danger">*</span></label>
       </div>
     </div>
         <div class="col-md-6 my-2">
@@ -152,7 +177,7 @@
       <div class="form-floating">
         <input [ngClass]="{'error': getControl('TeamName').invalid && getControl('TeamName').touched}" autocomplete="off" id="TeamName" placeholder="Team Name" class="form-control " type="text"
           formControlName="TeamName">
-        <label for="TeamName">Status on</label>
+        <label for="TeamName">Team Name</label>
       </div>
     </div>
   </div>

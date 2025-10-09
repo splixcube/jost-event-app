@@ -97,12 +97,10 @@ export class ManageEmployeeComponent {
       )
       .subscribe((res) => {
         this.employees = res;
-        console.log(res);
       });
   }
 
   onFileChange(event: any) {
-    console.log(event);
     /* wire up file reader */
     const target: DataTransfer = <DataTransfer>event.target;
     if (target.files.length !== 1) {
@@ -126,21 +124,20 @@ export class ManageEmployeeComponent {
        
         if (data && data.length > 0 && data[0]) {
           let excelData = data.map((item: any) => {
-            console.log(item);
-            return {
-              city: this.cityId,
+           return {
+              city: this.cityId || '',
               registered: false,
               verified: false,
               SrNo: item.SrNo || '',
-             EmployeeCode: item.EmployeeCode || item['Employee Code'],
-             EmployeeName: item.EmployeeName || item['Employee Name'],
+             EmployeeCode: item.EmployeeCode || item['Employee Code'] || '',
+             EmployeeName: item.EmployeeName || item['Employee Name'] || '',
              BusinessUnit: item.BusinessUnit || item['Business Unit'] || '',
-             DepartmentName: item.DepartmentName || item['Department Name'],
+             DepartmentName: item.DepartmentName || item['Department Name'] || '',
              MobileNo: item.MobileNo || '',
              SportName: item.SportName || item['Sport Name'] || '',
              SportType: item.SportType || item['Sport Type'] || '',
              TeamName: item.TeamName || item['Team Name'] || '',
-             EventId: item.EventId || item['Event Id'],
+             EventId: item.EventId || item['Event Id'] || '',
              JerseyType: item.JerseyType || '',
              JerseySize: item.JerseySize || '',
              LocationCode: item.LocationCode || item['Location Code'] || '',
@@ -153,7 +150,6 @@ export class ManageEmployeeComponent {
              StatusOn: this.formatDateString(item.StatusOn, 'iso') || '',
             };
           });
-          console.log(excelData);
           await this.bulkImport(excelData);
           this.messageService.add({
             severity: 'success',
@@ -162,7 +158,6 @@ export class ManageEmployeeComponent {
           });
           event.target.value = null;
         } else {
-          console.log(data,"excelData",this.importcolumns);
           this.messageService.add({
             severity: 'error',
             summary: 'Error',
@@ -189,7 +184,7 @@ export class ManageEmployeeComponent {
   }
 
   async addQueryBatch(contacts: any, resolve: any) {
-    const chunkSize = 490;
+    const chunkSize = 490; // Adjust the chunk size as needed
     for (let i = 0; i < contacts.length; i += chunkSize) {
       const chunk = contacts.slice(i, i + chunkSize);
       const batch = this.db.firestore.batch();
@@ -266,9 +261,93 @@ played(data:any){
     this.db.collection('employees').doc(id).delete();
   }
 
+  deleteSelectedRows() {
+    if (!this.selectedEmployees || this.selectedEmployees.length === 0) {
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'Warning',
+        detail: 'No rows selected for deletion',
+      });
+      return;
+    }
+
+    this.confirmationService.confirm({
+      message: `Are you sure you want to delete ${this.selectedEmployees.length} selected employee(s)? This action cannot be undone.`,
+      header: 'Confirm Deletion',
+      icon: 'pi pi-exclamation-triangle',
+      accept: () => {
+        this.deleteSelectedEmployees();
+      },
+    });
+  }
+
+  async deleteSelectedEmployees() {
+    try {
+      const batch = this.db.firestore.batch();
+      
+      this.selectedEmployees.forEach((employee: any) => {
+        const docRef = this.db.collection('employees').doc(employee.id).ref;
+        batch.delete(docRef);
+      });
+
+      await batch.commit();
+      
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Success',
+        detail: `${this.selectedEmployees.length} employee(s) deleted successfully`,
+      });
+      
+      // Clear selection after deletion
+      this.selectedEmployees = [];
+      
+    } catch (error) {
+      console.error('Error deleting employees:', error);
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'Failed to delete selected employees',
+      });
+    }
+  }
+
   clear(table: Table, inp: any) {
     inp.value = '';
     table.clear();
+  }
+
+  clearSelection() {
+    this.selectedEmployees = [];
+  }
+  selectRow(rowData: any) {
+    if(this.selectedEmployees.some((selected: any) => selected.id === rowData.id)) {
+      this.selectedEmployees = this.selectedEmployees.filter((selected: any) => selected.id !== rowData.id);
+    }
+    else {
+      this.selectedEmployees.push(rowData);
+    }
+  }
+
+  isAllSelected(): boolean {
+    return this.employees.length > 0 && this.selectedEmployees.length === this.employees.length;
+  }
+
+  isIndeterminate(): boolean {
+    return this.selectedEmployees.length > 0 && this.selectedEmployees.length < this.employees.length;
+  }
+
+  toggleSelectAll() {
+    if (this.isAllSelected()) {
+      // If all are selected, deselect all
+      this.selectedEmployees = [];
+    } else {
+      // If not all are selected, select all
+      this.selectedEmployees = [...this.employees];
+    }
+  }
+
+  isRowSelected(rowData: any): boolean {
+    return this.selectedEmployees && this.selectedEmployees.some((selected: any) => selected.id === rowData.id);
   }
 
   edit(data: any) {
@@ -303,7 +382,6 @@ played(data:any){
 
 
   exportExcel(table: Table) {
-    console.log(table);
    
     let filteredData:any
      if(this.selectedEmployees?.length>0) {
@@ -329,7 +407,6 @@ played(data:any){
      }
      else {
        filteredData=(table.filteredValue ? table.filteredValue : table.value).map((item)=>{
-        console.log(item);
         let obj:any={}
         this.exportColumns.forEach((column)=>{
           //add new field
@@ -381,8 +458,6 @@ saveAsExcelFile(buffer: any, fileName: string): void {
 }
 
 formatDateString(dateTimeString:any, format = 'default') {
-  console.log('Input dateTimeString:', dateTimeString, 'Type:', typeof dateTimeString, 'Format:', format);
-  
   // Return empty string if no date provided
   if (!dateTimeString) {
     return '';
@@ -436,7 +511,6 @@ formatDateString(dateTimeString:any, format = 'default') {
     console.warn('Invalid date:', dateTimeString);
     return '';
   }
-  console.log(date);
   // Add 1 day to the date
   if(typeof dateTimeString ==='number') {
     date.setDate(date.getDate() + 1);
@@ -447,8 +521,6 @@ formatDateString(dateTimeString:any, format = 'default') {
   switch (format.toLowerCase()) {
     case 'iso':
       const isoString = date.toISOString();
-      console.log('Original date:', dateTimeString, '-> Converted to ISO:', isoString);
-      console.log('Time components - Hours:', date.getHours(), 'Minutes:', date.getMinutes(), 'Seconds:', date.getSeconds());
       return isoString;
     
     case 'us':

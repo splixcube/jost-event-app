@@ -32,7 +32,12 @@
 p {
   margin: 0;
 }
-
+.btn-selection{
+  white-space: nowrap;
+  display: flex;
+    align-items: center;
+    gap: 5px;
+}
 .confirmation-content {
   display: flex;
   align-items: center;

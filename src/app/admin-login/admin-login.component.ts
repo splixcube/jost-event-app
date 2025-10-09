@@ -23,15 +23,18 @@ export class AdminLoginComponent {
     try {
       const data = this.loginForm.value;
       if(data.email===environment.adminEmail  &&  data.password===environment.adminPassword   )  {
-       localStorage.setItem('isLoggedIn','#@4$56123')
+        localStorage.setItem('isLoggedIn','#@4$56123')
        this.router.navigateByUrl('/admin')
+       return;
       }
        if(data.email===environment.adminEmailReadonly  &&  data.password===environment.adminPasswordReadonly   )  {
-       localStorage.setItem('isLoggedIn','#@4$56123')
+        localStorage.setItem('isLoggedIn','#@4$56123')
        localStorage.setItem('isAdminReadonly','true')
        this.router.navigateByUrl('/admin')
+       return;
       }
       else {
+        console.log(data.email,data.password,"3")
         this.toastService.add({severity:'error', summary: 'Error', detail: 'Unable to Login,Please Try again'})
       }
     } catch (err) {

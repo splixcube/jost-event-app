@@ -39,30 +39,11 @@
     </div>
     <div class="col-md-6 my-2">
       <div class="form-floating">
-
-        <input [ngClass]="{'error': getControl('SportName').invalid && getControl('SportName').touched}" autocomplete="off" id="SportName" placeholder="Sport Name" class="form-control " type="text"
-          formControlName="SportName">
-        <label for="SportName">Sport Name <span class="text-danger">*</span></label>
-      </div>
-    </div>
-<!--     <div class="col-md-6 my-2">
-      <div class="form-floating">
-        <input [ngClass]="{'error': getControl('EventName').invalid && getControl('EventName').touched}" autocomplete="off" id="EventName" placeholder="Event Name" class="form-control " type="text"
-          formControlName="EventName">
-
-        <label for="EventName">Event Name</label>
-      </div>
-    </div> -->
-    <div class="col-md-6 my-2">
-      <div class="form-floating">
-       <!--  <input [ngClass]="{'error': getControl('SportType').invalid && getControl('SportType').touched}" autocomplete="off" id="SportType" placeholder="Sport Type" class="form-control " type="text"
-          formControlName="SportType"> -->
-
-          <select  formControlName="SportType" class="form-control form-select px-2 p-0"
-          [ngClass]="{'error': getControl('SportType').invalid && getControl('SportType').touched}"
-          id="SportType">
+        <select  formControlName="SportName" class="form-control form-select px-2 p-0"
+        [ngClass]="{'error': getControl('SportName').invalid && getControl('SportName').touched}"
+        id="SportName">
 <option value="" disabled selected>Select Sport Type</option>
-            <option value="Badminton Men" >Badminton Men</option>
+          <option value="Badminton Men" >Badminton Men</option>
 <option value="Badminton Women" >Badminton Women</option>
 <option value="Badminton 40+" >Badminton 40+</option>
 <option value="Carrom" >Carrom</option>
@@ -81,9 +62,26 @@
 <option value="Track & Field Women" >Track & Field Women</option>
 <option value="Track & Field 40+" >Track & Field 40+</option>
 <option value="Volleyball" >Volleyball</option>
-          </select>
+        </select>
+        <!-- <input [ngClass]="{'error': getControl('SportName').invalid && getControl('SportName').touched}" autocomplete="off" id="SportName" placeholder="Sport Name" class="form-control " type="text"
+          formControlName="SportName"> -->
+       <!--  <label for="SportName">Sport Name <span class="text-danger">*</span></label> -->
+      </div>
+    </div>
+<!--     <div class="col-md-6 my-2">
+      <div class="form-floating">
+        <input [ngClass]="{'error': getControl('EventName').invalid && getControl('EventName').touched}" autocomplete="off" id="EventName" placeholder="Event Name" class="form-control " type="text"
+          formControlName="EventName">
 
-     <!--    <label for="SportType">Sport Type</label> -->
+        <label for="EventName">Event Name</label>
+      </div>
+    </div> -->
+    <div class="col-md-6 my-2">
+      <div class="form-floating">
+       <input [ngClass]="{'error': getControl('SportType').invalid && getControl('SportType').touched}" autocomplete="off" id="SportType" placeholder="Sport Type" class="form-control " type="text"
+          formControlName="SportType"> 
+
+        <label for="SportType">Sport Type</label> 
       </div>
     </div>
     <div class="col-md-6 my-2">

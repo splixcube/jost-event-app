@@ -109,3 +109,71 @@ tr {
 .p-datatable .p-datatable-tbody > tr{
   border-bottom: 2px solid lightgray;
 }
+
+/* Status badge styles */
+.played {
+  background-color: #28a745 !important;
+  color: white;
+  padding: 0.3rem;
+  border-radius: 6px;
+}
+
+.verified {
+  background-color: #17a2b8 !important;
+  color: white;
+  padding: 0.3rem;
+  border-radius: 6px;
+}
+
+.registered {
+  background-color: #ffc107 !important;
+  color: black;
+  padding: 0.3rem;
+  border-radius: 6px;
+}
+
+.pending {
+  background-color: #6c757d !important;
+  color: white;
+  padding: 0.3rem;
+  border-radius: 6px;
+}
+
+.w-100px {
+  width: 100px !important;
+}
+
+/* Selected row highlighting */
+.selected-row {
+  background-color: #e3f2fd !important;
+  border-left: 4px solid #2196f3 !important;
+}
+
+.selected-row:hover {
+  background-color: #bbdefb !important;
+}
+
+/* Custom checkbox styling */
+.form-check-input {
+  width: 18px !important;
+  height: 18px !important;
+  border: 2px solid #104d8a !important;
+  border-radius: 4px !important;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.form-check-input:checked {
+  background-color: #104d8a !important;
+  border-color: #104d8a !important;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3e%3cpath fill='none' stroke='%23fff' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='m6 10 3 3 6-6'/%3e%3c/svg%3e") !important;
+}
+
+.form-check-input:focus {
+  box-shadow: 0 0 0 0.2rem rgba(16, 77, 138, 0.25) !important;
+  border-color: #104d8a !important;
+}
+
+.form-check-input:hover {
+  border-color: #0d5aa7 !important;
+}

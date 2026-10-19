@@ -1,5 +1,13 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap');
 
+:root {
+  --brand: #104d8a;
+  --brand-dark: #0b3a69;
+  --brand-soft: #e8f0f9;
+  --page-bg: #f4f6fa;
+  --border: #e3e7ee;
+  --text-muted: #6b7280;
+}
 
 body {
   font-family: 'Roboto', sans-serif !important;
@@ -11,7 +19,6 @@ body {
   border: solid 1px lightblue;
   outline: none !important;
   border-radius: 15px;
-  outline: none !important;
 
   ::-moz-focus-inner {
     outline: none !important;
@@ -31,7 +38,7 @@ body {
 
 .p-datatable .p-datatable-thead > tr > th , .bg-table {
   color: white !important;
-  background: #104d8a !important;
+  background: var(--brand) !important;
 }
 
 tr {
@@ -43,15 +50,40 @@ tr {
 
 .btn-primary {
   color: white !important;
-  background: #104d8a !important;
-  border: solid 1px #104d8a !important;
-  border-radius: 15px;
+  background: var(--brand) !important;
+  border: solid 1px var(--brand) !important;
+  border-radius: 8px;
   font-size: 12px !important;
   min-width: 70px !important;
+
+  &:hover:not(:disabled) {
+    background: var(--brand-dark) !important;
+    border-color: var(--brand-dark) !important;
+  }
+
+  &:disabled {
+    opacity: 0.55;
+  }
 }
 
 .btn {
   font-size: 13px !important;
+}
+
+.btn-danger,
+.btn-secondary,
+.btn-outline-primary {
+  border-radius: 8px;
+}
+
+.btn-outline-primary {
+  color: var(--brand) !important;
+  border-color: var(--brand) !important;
+
+  &:hover:not(:disabled) {
+    color: white !important;
+    background: var(--brand) !important;
+  }
 }
 
 
@@ -80,14 +112,14 @@ tr {
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: #104d8a;
+  background: var(--brand);
   border-radius: 15px;
 }
 
 .p-column-filter-menu-button:hover {
   color: #ffffff !important;
   border-color: transparent !important;
-  background: #104d8a !important;
+  background: var(--brand) !important;
 }
 
 .p-sortable-column-icon , .p-column-filter-menu-button {
@@ -98,49 +130,48 @@ tr {
 .p-button {
   color: #ffffff !important;
   border-color: transparent !important;
-  background: #104d8a !important;
+  background: var(--brand) !important;
 }
 
 
 .p-column-filter-menu-button.p-column-filter-menu-button-active, .p-column-filter-menu-button.p-column-filter-menu-button-active:hover {
-  background: #104d8a !important;
+  background: var(--brand) !important;
   border:solid 1px #ffffff ;
 }
 .p-datatable .p-datatable-tbody > tr{
   border-bottom: 2px solid lightgray;
 }
 
-/* Status badge styles */
+/* Status badges */
+.status-badge {
+  display: inline-block;
+  min-width: 88px;
+  padding: 0.3rem 0.6rem;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  text-align: center;
+  white-space: nowrap;
+}
+
 .played {
   background-color: #28a745 !important;
   color: white;
-  padding: 0.3rem;
-  border-radius: 6px;
 }
 
 .verified {
   background-color: #17a2b8 !important;
   color: white;
-  padding: 0.3rem;
-  border-radius: 6px;
 }
 
 .registered {
   background-color: #ffc107 !important;
   color: black;
-  padding: 0.3rem;
-  border-radius: 6px;
 }
 
 .pending {
   background-color: #6c757d !important;
   color: white;
-  padding: 0.3rem;
-  border-radius: 6px;
-}
-
-.w-100px {
-  width: 100px !important;
 }
 
 /* Selected row highlighting */
@@ -157,23 +188,82 @@ tr {
 .form-check-input {
   width: 18px !important;
   height: 18px !important;
-  border: 2px solid #104d8a !important;
+  border: 2px solid var(--brand) !important;
   border-radius: 4px !important;
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
 .form-check-input:checked {
-  background-color: #104d8a !important;
-  border-color: #104d8a !important;
+  background-color: var(--brand) !important;
+  border-color: var(--brand) !important;
   background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3e%3cpath fill='none' stroke='%23fff' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='m6 10 3 3 6-6'/%3e%3c/svg%3e") !important;
 }
 
 .form-check-input:focus {
   box-shadow: 0 0 0 0.2rem rgba(16, 77, 138, 0.25) !important;
-  border-color: #104d8a !important;
+  border-color: var(--brand) !important;
 }
 
 .form-check-input:hover {
   border-color: #0d5aa7 !important;
+}
+
+/* ---------- Admin layout ---------- */
+.admin-main {
+  min-height: calc(100vh - 66px);
+  background: var(--page-bg);
+  padding: 1.5rem 0 2.5rem;
+}
+
+.admin-card {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  box-shadow: 0 1px 3px rgba(16, 24, 40, 0.06);
+}
+
+.page-title {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin: 0;
+}
+
+.page-subtitle {
+  color: var(--text-muted);
+  font-size: 13px;
+  margin: 0;
+}
+
+.admin-input {
+  border-radius: 8px !important;
+  border: 1px solid #cfd6e0 !important;
+  min-height: 42px;
+
+  &:focus {
+    border-color: var(--brand) !important;
+    box-shadow: 0 0 0 0.2rem rgba(16, 77, 138, 0.15) !important;
+  }
+}
+
+/* Dialogs: keep inside the viewport on small screens */
+.p-dialog .p-dialog-content {
+  padding-bottom: 1.25rem;
+}
+
+@media (max-width: 575.98px) {
+  .admin-main {
+    padding: 1rem 0 2rem;
+  }
+
+  .p-dialog .p-dialog-header,
+  .p-dialog .p-dialog-content {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .p-confirm-dialog {
+    width: 92vw !important;
+  }
 }

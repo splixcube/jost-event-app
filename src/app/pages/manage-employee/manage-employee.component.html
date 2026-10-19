@@ -1,218 +1,230 @@
-<h4 class="mt-2 p-2 text-center text-dark "> <b> City : {{cityData?.name}} </b> </h4>
-<div class="mx-4  mt-5 shadow-lg">
+<div class="container-fluid px-3 px-md-4 employee-page">
+  <a routerLink="/admin" class="back-link">
+    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
+      <path fill-rule="evenodd"
+        d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z" />
+    </svg>
+    All cities
+  </a>
 
-
-  <div class="row my-2 ">
-    <!-- <h4>Select A Excel File to Upload Data</h4> -->
-    <input style="display: none;" id="fileinp" class="form-control w-25 ms-4" type="file"
-      (change)="onFileChange($event)">
+  <div class="d-flex flex-wrap align-items-end justify-content-between gap-3 mt-2 mb-3">
+    <div>
+      <h1 class="page-title">City: {{ cityData?.name }}</h1>
+      <p class="page-subtitle">{{ loading ? 'Loading…' : employees.length + ' employees' }}</p>
+    </div>
+    <div class="stats">
+      <span class="stat"><span class="dot pending"></span>Pending <b>{{ stats.pending }}</b></span>
+      <span class="stat"><span class="dot registered"></span>Registered <b>{{ stats.registered }}</b></span>
+      <span class="stat"><span class="dot verified"></span>Attended <b>{{ stats.attended }}</b></span>
+      <span class="stat"><span class="dot played"></span>Played <b>{{ stats.played }}</b></span>
+    </div>
   </div>
-  <p-table [(selection)]="selectedEmployees" selectionMode="multiple" [showCurrentPageReport]="true"
-    [rowsPerPageOptions]="[5,10]" [paginator]="true"
-    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [rows]="10"
 
-    [globalFilterFields]="[
-      'EmployeeCode',
-    'EmployeeName',
-    'BusinessUnit',
-    'MobileNo',
-    'SportName',
-    'SportType',
-    'TeamName',
-    'EventId',
-    'JerseyType',
-    'JerseySize',
-    'LocationCode',
-    'Location',
-    'UserCity',
-    'State',
-    'Region',
-    'AppliedDate',
-    'Status',
-    'StatusOn']"
+  <input style="display: none;" id="fileinp" type="file" accept=".xlsx,.xls,.csv" (change)="onFileChange($event)">
 
-    #dt [columns]="exportColumns" [value]="employees"
-    [exportHeader]="'customExportHeader'" scrollHeight="550px">
-    <ng-template pTemplate="caption">
-      <div class="table-header grid-md grid-sm">
-        <div class="d-flex align-items-center ">
-          <span style="border-radius: 20px;" class="p-input-icon-left mx-2 inp d-flex align-items-center p-1 ">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search"
-              viewBox="0 0 16 16">
-              <path
-                d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
-            </svg>
-            <input type="text" class="border-0 mx-1 outline-none p-2" #inp
-              (input)="dt.filterGlobal(inp.value, 'contains')" placeholder="Search" />
-          </span>
-          <button class="btn btn-primary btn-selection mx-1 " (click)="clear(dt,inp)">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-square"
-              viewBox="0 0 16 16">
-              <path
-                d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z" />
-              <path
-                d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
-            </svg>
-           <span class="d-md-block d-none"> Clear </span>
-          </button>
-          <button class="btn btn-secondary btn-selection mx-1" 
-                  [disabled]="!selectedEmployees || selectedEmployees.length === 0"
-                  (click)="clearSelection()">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-circle"
-              viewBox="0 0 16 16">
-              <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-              <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
-            </svg>
-            <span class="d-md-block d-none"> Clear Selection</span>
-          </button>
-          <button class="btn btn-danger btn-selection mx-1" 
-                  [disabled]="!selectedEmployees || selectedEmployees.length === 0"
-                  (click)="deleteSelectedRows()">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash"
-              viewBox="0 0 16 16">
-              <path
-                d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" />
-              <path fill-rule="evenodd"
-                d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z" />
-            </svg>
-            <span class="d-md-block d-none"> Delete Selected ({{selectedEmployees?.length || 0}})</span>
-          </button>
-        </div>
-        <div class="d-flex justify-content-end-md align-items-center mt-sm-2">
-          <button class="btn btn-primary mx-1" (click)="import()">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-              class="bi bi-file-earmark-arrow-up" viewBox="0 0 16 16">
-              <path
-                d="M8.5 11.5a.5.5 0 0 1-1 0V7.707L6.354 8.854a.5.5 0 1 1-.708-.708l2-2a.5.5 0 0 1 .708 0l2 2a.5.5 0 0 1-.708.708L8.5 7.707V11.5z" />
-              <path
-                d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2zM9.5 3A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5v2z" />
-            </svg> Import </button>
-          <button class="btn btn-primary mx-1" (click)="exportExcel(dt)"><svg xmlns="http://www.w3.org/2000/svg"
-              width="16" height="16" fill="currentColor" class="bi bi-file-earmark-arrow-down" viewBox="0 0 16 16">
-              <path
-                d="M8.5 6.5a.5.5 0 0 0-1 0v3.793L6.354 9.146a.5.5 0 1 0-.708.708l2 2a.5.5 0 0 0 .708 0l2-2a.5.5 0 0 0-.708-.708L8.5 10.293V6.5z" />
-              <path
-                d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2zM9.5 3A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5v2z" />
-            </svg> Export </button>
-          <button class="btn btn-primary mx-1" (click)="add()">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle"
-              viewBox="0 0 16 16">
-              <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
-              <path
-                d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
-            </svg> Add New </button>
-        </div>
-      </div>
-    </ng-template>
-    <ng-template pTemplate="header" let-columns>
-      <tr>
-        <th class="text-center">
-          <div class="form-check d-inline-block">
-            <input type="checkbox" 
-                   [checked]="isAllSelected()"
-                   [indeterminate]="isIndeterminate()"
-                   (change)="toggleSelectAll()"
-                   class="form-check-input"
-                   id="header-checkbox">
-            <label class="form-check-label" for="header-checkbox" style="cursor: pointer;">
-              <!-- Invisible label for better click area -->
-            </label>
+  <div class="admin-card table-card">
+    <p-table #dt [(selection)]="selectedEmployees" selectionMode="multiple"
+      [showCurrentPageReport]="true" [rowsPerPageOptions]="[5,10]" [paginator]="true" [rows]="10"
+      currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+      [globalFilterFields]="[
+        'EmployeeCode',
+        'EmployeeName',
+        'BusinessUnit',
+        'MobileNo',
+        'SportName',
+        'SportType',
+        'TeamName',
+        'EventId',
+        'JerseyType',
+        'JerseySize',
+        'LocationCode',
+        'Location',
+        'UserCity',
+        'State',
+        'Region',
+        'AppliedDate',
+        'Status',
+        'StatusOn']"
+      [columns]="exportColumns" [value]="employees" [loading]="loading" scrollHeight="560px"
+      responsiveLayout="stack" breakpoint="767px">
+      <ng-template pTemplate="caption">
+        <div class="toolbar">
+          <div class="toolbar-group toolbar-search">
+            <span class="search-box">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search"
+                viewBox="0 0 16 16">
+                <path
+                  d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
+              </svg>
+              <input type="text" class="outline-none" #inp (input)="dt.filterGlobal(inp.value, 'contains')"
+                placeholder="Search employees" />
+            </span>
+            <button class="btn btn-primary btn-selection" (click)="clear(dt, inp)" title="Clear search and filters">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-square"
+                viewBox="0 0 16 16">
+                <path
+                  d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z" />
+                <path
+                  d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
+              </svg>
+              <span>Clear</span>
+            </button>
           </div>
-         <!--  <span class="ms-2 text-muted" *ngIf="selectedEmployees && selectedEmployees.length > 0">
-            ({{selectedEmployees.length}} selected)
-          </span> -->
-        </th>
-        <th>Sr. no.</th>
-        <th class="w-100 text-center">Action</th>
-        <th>{{'Status'}}</th>
 
-        <ng-container *ngFor="let column of columns">
-          <th *ngIf="!column?.hide" [pSortableColumn]="column.field">
-            <div class="d-flex justify-content-between align-items-center">
-                {{column.header}}
-              <p-sortIcon *ngIf="column.field!='SrNo'" class="text-white" field="country.name"></p-sortIcon>
-              <p-columnFilter *ngIf="column.field!='SrNo'" class="text-white" type="text" [field]="column.field"
-                display="menu" class="ml-auto"></p-columnFilter>
-            </div>
+          <div class="toolbar-group toolbar-actions">
+            <button class="btn btn-secondary btn-selection" [disabled]="!selectedEmployees || selectedEmployees.length === 0"
+              (click)="clearSelection()">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-circle"
+                viewBox="0 0 16 16">
+                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                <path
+                  d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
+              </svg>
+              <span class="d-none d-md-inline">Clear Selection</span><span class="d-md-none">Unselect</span>
+            </button>
+            <button class="btn btn-danger btn-selection" *ngIf="checkDeletePermision !== 'true'"
+              [disabled]="!selectedEmployees || selectedEmployees.length === 0" (click)="deleteSelectedRows()">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash"
+                viewBox="0 0 16 16">
+                <path
+                  d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" />
+                <path fill-rule="evenodd"
+                  d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z" />
+              </svg>
+              <span class="d-none d-md-inline">Delete Selected ({{ selectedEmployees?.length || 0 }})</span><span class="d-md-none">Delete ({{ selectedEmployees?.length || 0 }})</span>
+            </button>
+            <span class="toolbar-divider d-none d-lg-inline-block"></span>
+            <button class="btn btn-primary btn-selection" (click)="import()">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                class="bi bi-file-earmark-arrow-up" viewBox="0 0 16 16">
+                <path
+                  d="M8.5 11.5a.5.5 0 0 1-1 0V7.707L6.354 8.854a.5.5 0 1 1-.708-.708l2-2a.5.5 0 0 1 .708 0l2 2a.5.5 0 0 1-.708.708L8.5 7.707V11.5z" />
+                <path
+                  d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2zM9.5 3A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5v2z" />
+              </svg>
+              <span>Import</span>
+            </button>
+            <button class="btn btn-primary btn-selection" (click)="exportExcel(dt)">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                class="bi bi-file-earmark-arrow-down" viewBox="0 0 16 16">
+                <path
+                  d="M8.5 6.5a.5.5 0 0 0-1 0v3.793L6.354 9.146a.5.5 0 1 0-.708.708l2 2a.5.5 0 0 0 .708 0l2-2a.5.5 0 0 0-.708-.708L8.5 10.293V6.5z" />
+                <path
+                  d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2zM9.5 3A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5v2z" />
+              </svg>
+              <span>Export</span>
+            </button>
+            <button class="btn btn-primary btn-selection" (click)="add()">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle"
+                viewBox="0 0 16 16">
+                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                <path
+                  d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
+              </svg>
+              <span>Add New</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- The header row (with its select-all box) is hidden in the stacked mobile layout -->
+        <label class="mobile-select-all d-md-none">
+          <input type="checkbox" class="form-check-input m-0" [checked]="isAllSelected()"
+            [indeterminate]="isIndeterminate()" (change)="toggleSelectAll()">
+          Select all {{ dt.filteredValue ? 'matching' : '' }} ({{ (dt.filteredValue || employees).length }})
+        </label>
+      </ng-template>
+
+      <ng-template pTemplate="header" let-columns>
+        <tr>
+          <th class="text-center col-check">
+            <input type="checkbox" [checked]="isAllSelected()" [indeterminate]="isIndeterminate()"
+              (change)="toggleSelectAll()" class="form-check-input m-0" aria-label="Select all">
           </th>
-        </ng-container>
+          <th class="col-sr">Sr. no.</th>
+          <th class="text-center">Action</th>
+          <th>Status</th>
 
+          <ng-container *ngFor="let column of columns">
+            <th *ngIf="!column?.hide" [pSortableColumn]="column.field">
+              <div class="d-flex justify-content-between align-items-center gap-1">
+                {{ column.header }}
+                <span class="d-inline-flex align-items-center">
+                  <p-sortIcon [field]="column.field"></p-sortIcon>
+                  <p-columnFilter type="text" [field]="column.field" display="menu"></p-columnFilter>
+                </span>
+              </div>
+            </th>
+          </ng-container>
+        </tr>
+      </ng-template>
 
-      </tr>
-    </ng-template>
-    <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex" let-columns="columns">
-      <tr [pSelectableRow]="rowData" [class.selected-row]="isRowSelected(rowData)">
-        <td class="text-center">
-          <div class="form-check d-inline-block">
-            <input type="checkbox" 
-                   [checked]="isRowSelected(rowData)"
-                   (change)="selectRow(rowData)"
-                   class="form-check-input"
-                   [id]="'checkbox-' + rowData.id">
-            <label class="form-check-label" [for]="'checkbox-' + rowData.id" style="cursor: pointer;">
-              <!-- Invisible label for better click area -->
-            </label>
-          </div>
-        </td>
-        <td>
-        {{rowIndex + 1}}
-        </td>
-        <td class="text-center">
-          <div class="d-flex">
-             <button *ngIf="rowData.verified && rowData.registered && !rowData.played" class="btn btn-warning me-1"
-            (click)="played(rowData)">Played</button>
-          <button *ngIf="!rowData.verified && rowData.registered" class="btn btn-primary me-1"
-            (click)="verifyOTP(rowData)">Attend</button>
-          <button *ngIf="!rowData.registered" class="btn btn-primary me-1" (click)="register(rowData)">Register</button>
-          <button class="btn btn-primary" (click)="edit(rowData)">Edit</button>
-
-          <button class="btn btn-danger mx-1 text-center"  *ngIf="checkDeletePermision !=='true'"
-          (click)="deleteRow(rowData.id)"><svg
-              xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash"
-              viewBox="0 0 16 16">
-              <path
-                d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" />
-              <path fill-rule="evenodd"
-                d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z" />
-            </svg></button>
+      <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex" let-columns="columns">
+        <tr [pSelectableRow]="rowData" [class.selected-row]="isRowSelected(rowData)">
+          <td class="text-center col-check">
+            <span class="p-column-title">Select</span>
+            <input type="checkbox" [checked]="isRowSelected(rowData)" (change)="selectRow(rowData)"
+              class="form-check-input m-0" [attr.aria-label]="'Select ' + rowData.EmployeeName">
+          </td>
+          <td class="col-sr">
+            <span class="p-column-title">Sr. no.</span>
+            {{ rowIndex + 1 }}
+          </td>
+          <td class="col-actions">
+            <span class="p-column-title">Action</span>
+            <div class="row-actions">
+              <button *ngIf="rowData.verified && rowData.registered && !rowData.played" class="btn btn-warning btn-sm"
+                (click)="played(rowData)">Played</button>
+              <button *ngIf="!rowData.verified && rowData.registered" class="btn btn-primary btn-sm"
+                (click)="verifyOTP(rowData)">Attend</button>
+              <button *ngIf="!rowData.registered" class="btn btn-primary btn-sm"
+                (click)="register(rowData)">Register</button>
+              <button class="btn btn-outline-primary btn-sm" (click)="edit(rowData)">Edit</button>
+              <button class="btn btn-danger btn-sm icon-btn" *ngIf="checkDeletePermision !== 'true'"
+                (click)="deleteRow(rowData.id)" aria-label="Delete employee" title="Delete employee">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-trash"
+                  viewBox="0 0 16 16">
+                  <path
+                    d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" />
+                  <path fill-rule="evenodd"
+                    d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z" />
+                </svg>
+              </button>
             </div>
-        </td>
-        <td>
-          <span class="played w-100px" *ngIf="rowData.registered && rowData.verified && rowData.played">{{'Played'}}</span>
-          <span class="verified w-100px" *ngIf="rowData.registered && rowData.verified && !rowData.played">{{'Attended'}}</span>
-          <span class="registered w-100px" *ngIf="rowData.registered && !rowData.verified">{{'Registered'}}</span>
-          <span class="pending w-100px" *ngIf="!rowData.registered && !rowData.verified">{{'Pending'}}</span>
-        </td>
-
-        <ng-container *ngFor="let col of columns;let i=index">
-
-          <td *ngIf="!col?.hide">
-            <ng-container *ngIf="col.field!='registered' && col.field!='verified' && col.field!='AppliedDate' && col.field!='StatusOn' ">
-              {{rowData[col.field]}}
-            </ng-container>
-            <ng-container *ngIf="col.field=='AppliedDate'">
-              {{rowData[col.field] | date:'dd/MM/yyyy'}}
-            </ng-container>
-            <ng-container *ngIf="col.field=='StatusOn'">
-              {{rowData[col.field] | date:'dd/MM/yyyy'}}
-            </ng-container>
-            <ng-container *ngIf="col.field=='verified'">
-              {{rowData[col.field] ? 'Yes' : 'No'}}
-            </ng-container>
-            <ng-container *ngIf="col.field=='registered'">
-              {{rowData[col.field] ? 'Yes' : 'No'}}
+          </td>
+          <td>
+            <span class="p-column-title">Status</span>
+            <ng-container [ngSwitch]="getStatus(rowData)">
+              <span *ngSwitchCase="'played'" class="status-badge played">Played</span>
+              <span *ngSwitchCase="'attended'" class="status-badge verified">Attended</span>
+              <span *ngSwitchCase="'registered'" class="status-badge registered">Registered</span>
+              <span *ngSwitchCase="'pending'" class="status-badge pending">Pending</span>
             </ng-container>
           </td>
-        </ng-container>
 
+          <ng-container *ngFor="let col of columns">
+            <td *ngIf="!col?.hide">
+              <span class="p-column-title">{{ col.header }}</span>
+              <ng-container [ngSwitch]="col.field">
+                <ng-container *ngSwitchCase="'AppliedDate'">{{ rowData[col.field] | date:'dd/MM/yyyy' }}</ng-container>
+                <ng-container *ngSwitchCase="'StatusOn'">{{ rowData[col.field] | date:'dd/MM/yyyy' }}</ng-container>
+                <ng-container *ngSwitchCase="'registered'">{{ rowData[col.field] ? 'Yes' : 'No' }}</ng-container>
+                <ng-container *ngSwitchCase="'verified'">{{ rowData[col.field] ? 'Yes' : 'No' }}</ng-container>
+                <ng-container *ngSwitchDefault>{{ rowData[col.field] }}</ng-container>
+              </ng-container>
+            </td>
+          </ng-container>
+        </tr>
+      </ng-template>
 
-
-      </tr>
-    </ng-template>
-    <ng-template pTemplate="emptymessage">
-      <tr>
-        <td colspan="8">No customers found.</td>
-      </tr>
-    </ng-template>
-  </p-table>
+      <ng-template pTemplate="emptymessage" let-columns>
+        <tr>
+          <td [attr.colspan]="4 + columns.length" class="empty-cell">
+            <div class="empty-state">
+              {{ employees.length ? 'No employees match your search or filters.' : 'No employees in this city yet. Use Import or Add New to add them.' }}
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
 </div>

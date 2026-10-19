@@ -1,8 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { MessageService, ConfirmationService } from 'primeng/api';
-import { Observable } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 @Component({
@@ -10,11 +10,14 @@ import { map } from 'rxjs/operators';
   templateUrl: './mamage-cities.component.html',
   styleUrls: ['./mamage-cities.component.scss'],
 })
-export class MamageCitiesComponent {
+export class MamageCitiesComponent implements OnDestroy {
   cityForm: FormGroup;
   collection = 'cities';
   cities: any = [];
+  loading = true;
+  search = '';
   checkDeletePermision:any='false';
+  private citiesSub?: Subscription;
   constructor(
     public db: AngularFirestore,
     public fb: FormBuilder,
@@ -26,11 +29,15 @@ export class MamageCitiesComponent {
     this.checkDeletePermision=localStorage.getItem('isAdminReadonly')||'false'
   }
   save() {
-    this.db.collection(this.collection).add(this.cityForm.value);
+    const name = (this.cityForm.value.name || '').trim();
+    if (!name) {
+      return;
+    }
+    this.db.collection(this.collection).add({ ...this.cityForm.value, name });
     this.cityForm.reset();
   }
   setAllCities() {
-    this.db
+    this.citiesSub = this.db
       .collection('cities')
       .snapshotChanges()
       .pipe(
@@ -44,7 +51,17 @@ export class MamageCitiesComponent {
       )
       .subscribe((res: any) => {
         this.cities = res;
+        this.loading = false;
       });
+  }
+
+  get filteredCities() {
+    const term = this.search.trim().toLowerCase();
+    return term ? this.cities.filter((city: any) => (city.name || '').toLowerCase().includes(term)) : this.cities;
+  }
+
+  ngOnDestroy() {
+    this.citiesSub?.unsubscribe();
   }
 
   async deleteCity(id: string) {

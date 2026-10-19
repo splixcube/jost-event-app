@@ -1,4 +1,6 @@
-<input type="number" [(ngModel)]="otp" class="form-control inp">
-<div class="text-center">
-  <button class="btn btn-primary my-2 mx-auto" (click)="verify()">Verify</button>
-</div>
+<form (ngSubmit)="verify()" class="otp-form">
+  <p class="otp-hint">Enter the 4-digit OTP sent to <b>{{ config.data?.MobileNo }}</b></p>
+  <input type="number" inputmode="numeric" [(ngModel)]="otp" name="otp" class="form-control admin-input otp-input"
+    placeholder="OTP" autocomplete="one-time-code" autofocus>
+  <button type="submit" class="btn btn-primary w-100 mt-3 py-2 verify-btn" [disabled]="!otp">Verify</button>
+</form>

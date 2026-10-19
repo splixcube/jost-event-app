@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, ViewChild } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { ActivatedRoute } from '@angular/router';
 import { map } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
 import { DialogService } from 'primeng/dynamicdialog';
 
 import * as XLSX from 'xlsx';
@@ -15,28 +16,12 @@ import * as FileSaver from 'file-saver';
   templateUrl: './manage-employee.component.html',
   styleUrls: ['./manage-employee.component.scss'],
 })
-export class ManageEmployeeComponent {
+export class ManageEmployeeComponent implements OnDestroy {
+  @ViewChild('dt') dt?: Table;
+  stats = { pending: 0, registered: 0, attended: 0, played: 0 };
+  private subs = new Subscription();
   cityData:any=null
   selectedEmployees: any =[];
-  importcolumns = [
-    'SrNo',
-    'EmployeeCode',
-    'EmployeeName',
-    'BusinessUnit',
-    'DepartmentName',
-    'MobileNo',
-    'SportName',
-    'SportType',
-    'EventId',
-    'JerseyType',
-    'JerseySize',
-    'Location',
-    'LocationCode',
-    'AppliedDate',
-    'Status',
-    'StatusOn',
-    'TeamName'
-  ];
   exportColumns: any[] = [
     { field: 'EmployeeCode', header: 'Employee Code' },
     { field: 'EmployeeName', header: 'Employee Name' },
@@ -63,6 +48,7 @@ export class ManageEmployeeComponent {
   ];
   cityId:any;
   employees: any = [];
+  loading = true;
 
   checkDeletePermision:any='false';
   constructor(
@@ -74,16 +60,20 @@ export class ManageEmployeeComponent {
   ) {
 
     this.cityId = this.route.snapshot.paramMap.get('id');
-    this.db.collection("cities").doc(this.cityId).get().subscribe(res=>{
+    this.subs.add(this.db.collection("cities").doc(this.cityId).get().subscribe(res=>{
       this.cityData=res.data()
-    })
+    }))
     this.getAllEmployees();
     this.checkDeletePermision=localStorage.getItem('isAdminReadonly')||'false'
   }
 
 
+  ngOnDestroy() {
+    this.subs.unsubscribe();
+  }
+
   getAllEmployees() {
-    this.db
+    this.subs.add(this.db
       .collection('employees', (ref) => ref.where('city', '==', this.cityId))
       .snapshotChanges()
       .pipe(
@@ -97,7 +87,26 @@ export class ManageEmployeeComponent {
       )
       .subscribe((res) => {
         this.employees = res;
-      });
+        this.loading = false;
+        this.updateStats();
+      }));
+  }
+
+  getStatus(item: any): 'played' | 'attended' | 'registered' | 'pending' | '' {
+    if (item.registered && item.verified && item.played) return 'played';
+    if (item.registered && item.verified) return 'attended';
+    if (item.registered && !item.verified) return 'registered';
+    if (!item.registered && !item.verified) return 'pending';
+    return '';
+  }
+
+  updateStats() {
+    const stats = { pending: 0, registered: 0, attended: 0, played: 0 };
+    this.employees.forEach((item: any) => {
+      const status = this.getStatus(item);
+      if (status) stats[status]++;
+    });
+    this.stats = stats;
   }
 
   onFileChange(event: any) {
@@ -213,23 +222,8 @@ played(data:any){
     this.db.collection('employees').doc(id).update({ registered: true });
   }
 
-  dismiss() {}
-
   verifyOTP(data: any) {
     this.verify(data.id);
-   /*  const ref = this.dialogService.open(VerifyOptComponent, {
-      data: {
-        ...data,
-        type: 'verificationCode',
-      },
-      header: 'Verify OTP',
-      width: '35%',
-    });
-    ref.onClose.subscribe((res: any) => {
-      if (res && res.verified) {
-        this.verify(res.id);
-      }
-    }); */
   }
 
   register(data: any) {
@@ -239,7 +233,8 @@ played(data:any){
         type: 'registrationCode',
       },
       header: 'Verify OTP',
-      width: '35%',
+      width: '400px',
+      style: { 'max-width': '95vw' },
     });
     ref.onClose.subscribe((res: any) => {
       if (res && res.verified) {
@@ -320,29 +315,37 @@ played(data:any){
     this.selectedEmployees = [];
   }
   selectRow(rowData: any) {
-    if(this.selectedEmployees.some((selected: any) => selected.id === rowData.id)) {
+    if (this.isRowSelected(rowData)) {
       this.selectedEmployees = this.selectedEmployees.filter((selected: any) => selected.id !== rowData.id);
+    } else {
+      this.selectedEmployees = [...this.selectedEmployees, rowData];
     }
-    else {
-      this.selectedEmployees.push(rowData);
-    }
+  }
+
+  // Rows the select-all box acts on: the search/filter result when one is active, otherwise every row.
+  private get selectableRows(): any[] {
+    return this.dt?.filteredValue || this.employees;
   }
 
   isAllSelected(): boolean {
-    return this.employees.length > 0 && this.selectedEmployees.length === this.employees.length;
+    const rows = this.selectableRows;
+    if (!rows.length || !this.selectedEmployees?.length) return false;
+    const selectedIds = new Set(this.selectedEmployees.map((selected: any) => selected.id));
+    return rows.every((row: any) => selectedIds.has(row.id));
   }
 
   isIndeterminate(): boolean {
-    return this.selectedEmployees.length > 0 && this.selectedEmployees.length < this.employees.length;
+    return this.selectedEmployees?.length > 0 && !this.isAllSelected();
   }
 
   toggleSelectAll() {
+    const rows = this.selectableRows;
     if (this.isAllSelected()) {
-      // If all are selected, deselect all
-      this.selectedEmployees = [];
+      const rowIds = new Set(rows.map((row: any) => row.id));
+      this.selectedEmployees = this.selectedEmployees.filter((selected: any) => !rowIds.has(selected.id));
     } else {
-      // If not all are selected, select all
-      this.selectedEmployees = [...this.employees];
+      const selectedIds = new Set(this.selectedEmployees.map((selected: any) => selected.id));
+      this.selectedEmployees = [...this.selectedEmployees, ...rows.filter((row: any) => !selectedIds.has(row.id))];
     }
   }
 
@@ -352,26 +355,20 @@ played(data:any){
 
   edit(data: any) {
     data.city = this.cityId;
-    const ref = this.dialogService.open(AddEmployeeComponent, {
+    this.dialogService.open(AddEmployeeComponent, {
       data: data,
       header: 'Edit Employee',
-      width: '85%',
-    });
-    ref.onClose.subscribe((res: any) => {
-      if (res && res?.added) {
-      }
+      width: '900px',
+      style: { 'max-width': '95vw' },
     });
   }
 
   add() {
-    const ref = this.dialogService.open(AddEmployeeComponent, {
+    this.dialogService.open(AddEmployeeComponent, {
       data: this.cityId,
       header: 'Add Employee',
-      width: '85%',
-    });
-    ref.onClose.subscribe((res: any) => {
-      if (res && res?.added) {
-      }
+      width: '900px',
+      style: { 'max-width': '95vw' },
     });
   }
 
@@ -379,73 +376,37 @@ played(data:any){
     document.getElementById('fileinp')?.click();
   }
 
-
-
   exportExcel(table: Table) {
-   
-    let filteredData:any
-     if(this.selectedEmployees?.length>0) {
-      filteredData=table.selection.map((item:any)=>{
-        let obj:any={}
-         if(item.registered && item.verified && item.played){
-             obj['status']='Played'
-          }
-            if(item.registered && item.verified && !item.played){
-               obj['status']='Attended'
-          }
-            if(item.registered && !item.verified){
-             obj['status']='Registered'
-          }
-            if(!item.registered && !item.verified){
-               obj['status']='Pending'
-          }
-        this.exportColumns.forEach((column)=>{
-          obj[column.field]=item[column.field]
-        })
-        return obj
-      })
-     }
-     else {
-       filteredData=(table.filteredValue ? table.filteredValue : table.value).map((item)=>{
-        let obj:any={}
-        this.exportColumns.forEach((column)=>{
-          //add new field
-          
-          if(item.registered && item.verified && item.played){
-             obj['status']='Played'
-          }
-            if(item.registered && item.verified && !item.played){
-               obj['status']='Attended'
-          }
-            if(item.registered && !item.verified){
-             obj['status']='Registered'
-          }
-            if(!item.registered && !item.verified){
-               obj['status']='Pending'
-          }
+    const rows = this.selectedEmployees?.length > 0
+      ? this.selectedEmployees
+      : (table.filteredValue ? table.filteredValue : table.value);
+    const filteredData = rows.map((item: any) => this.toExportRow(item));
 
-          if(column.field=='registered' || column.field=='verified' ) {
-            obj[column.field]=item[column.field] ? 'Yes' : 'No'
-          }
-           if(column.field=='UserCity' ) {
-            obj['City']=item['UserCity'] || ''
-          } 
-          else {
-            obj[column.field]=item[column.field]
-          }
-
-        })
-        return obj
-      })
-     }
-
-// return
     import("xlsx").then(xlsx => {
         const worksheet = xlsx.utils.json_to_sheet(filteredData);
         const workbook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
         const excelBuffer: any = xlsx.write(workbook, { bookType: 'xlsx', type: 'array' });
         this.saveAsExcelFile(excelBuffer, "Employee-Data");
     });
+}
+
+toExportRow(item: any) {
+    const labels: any = { played: 'Played', attended: 'Attended', registered: 'Registered', pending: 'Pending' };
+    const status = this.getStatus(item);
+    const obj: any = {};
+    if (status) {
+      obj['status'] = labels[status];
+    }
+    this.exportColumns.forEach((column) => {
+      if (column.field == 'registered' || column.field == 'verified') {
+        obj[column.field] = item[column.field] ? 'Yes' : 'No';
+      } else if (column.field == 'UserCity') {
+        obj['City'] = item['UserCity'] || '';
+      } else {
+        obj[column.field] = item[column.field];
+      }
+    });
+    return obj;
 }
 
 saveAsExcelFile(buffer: any, fileName: string): void {

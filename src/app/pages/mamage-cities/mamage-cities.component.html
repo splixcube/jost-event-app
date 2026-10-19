@@ -1,46 +1,66 @@
-<div class="container my-5 shadow-sm">
-  <form [formGroup]="cityForm">
-
-    <div class="row align-items-center mx-auto">
-      <div class="col-md-2 my-2">
-        <h5 class="text-center"> <b> Add New City</b> </h5>
-      </div>
-      <div class="col-md-8 my-2">
-        <div class="form-group">
-          <input autocomplete="off" placeholder="City Name" class="form-control inp" type="text" name="name"
-            formControlName="name">
-        </div>
-      </div>
-      <div class="col-md-2 my-2 text-center">
-        <button [disabled]="!cityForm.valid" class="btn btn-primary my-auto mx-auto " (click)="save()">Add</button>
-      </div>
+<div class="container cities-page">
+  <div class="d-flex flex-wrap align-items-end justify-content-between gap-2 mb-3">
+    <div>
+      <h1 class="page-title">Cities</h1>
+      <p class="page-subtitle" *ngIf="!loading">{{ cities.length }} {{ cities.length === 1 ? 'city' : 'cities' }}</p>
     </div>
-  </form>
-  <hr>
-  <table class="table my-5 ">
-    <thead class="bg-table">
-      <tr>
-        <th scope="col">Sr.</th>
-        <th scope="col">City</th>
-        <th scope="col" class="text-center">Action</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let city of cities;let i=index">
-        <th scope="row">{{i+1}}.</th>
-        <td> <strong>{{city.name}} </strong> </td>
-        <td class="text-center">
-          <button routerLink="/admin/manage-employee/{{city.id}}" class="btn btn-primary">Manage Employee</button>
-          <button class="btn btn-danger mx-2" *ngIf="checkDeletePermision !=='true'"
-          (click)="deleteCity(city.id)"><svg xmlns="http://www.w3.org/2000/svg"
-              width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
-              <path
-                d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" />
-              <path fill-rule="evenodd"
-                d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z" />
-            </svg></button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+  </div>
+
+  <div class="admin-card p-3 p-md-4 mb-4">
+    <form [formGroup]="cityForm" (ngSubmit)="save()" class="add-city-form">
+      <label for="cityName" class="form-label">Add new city</label>
+      <div class="d-flex flex-column flex-sm-row gap-2">
+        <input id="cityName" autocomplete="off" placeholder="City name" class="form-control admin-input" type="text"
+          formControlName="name">
+        <button type="submit" [disabled]="!cityForm.valid" class="btn btn-primary px-4 add-btn">Add city</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="admin-card overflow-hidden">
+    <div class="list-search">
+      <input type="search" class="form-control admin-input" placeholder="Search cities" [(ngModel)]="search"
+        aria-label="Search cities">
+    </div>
+    <table class="table cities-table mb-0 align-middle">
+      <thead class="bg-table">
+        <tr>
+          <th scope="col" class="sr-col">Sr.</th>
+          <th scope="col">City</th>
+          <th scope="col" class="text-end">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let city of filteredCities; let i = index">
+          <td class="sr-col text-muted">{{ i + 1 }}.</td>
+          <td><strong>{{ city.name }}</strong></td>
+          <td>
+            <div class="d-flex justify-content-end align-items-center gap-2">
+              <button routerLink="/admin/manage-employee/{{ city.id }}" class="btn btn-primary btn-sm">
+                Manage<span class="d-none d-sm-inline"> Employees</span>
+              </button>
+              <button class="btn btn-danger btn-sm icon-btn" *ngIf="checkDeletePermision !== 'true'"
+                (click)="deleteCity(city.id)" aria-label="Delete city" title="Delete city">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash"
+                  viewBox="0 0 16 16">
+                  <path
+                    d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" />
+                  <path fill-rule="evenodd"
+                    d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z" />
+                </svg>
+              </button>
+            </div>
+          </td>
+        </tr>
+        <tr *ngIf="loading">
+          <td colspan="3" class="text-center text-muted py-4">Loading cities…</td>
+        </tr>
+        <tr *ngIf="!loading && filteredCities.length === 0">
+          <td colspan="3" class="text-center text-muted py-4">
+            {{ cities.length === 0 ? 'No cities added yet.' : 'No cities match your search.' }}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>

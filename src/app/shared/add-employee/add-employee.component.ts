@@ -1,14 +1,9 @@
-import { Component, Input } from '@angular/core';
+import { Component } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { ConfirmationService, MessageService } from 'primeng/api';
-import {
-  DialogService,
-  DynamicDialogConfig,
-  DynamicDialogRef,
-} from 'primeng/dynamicdialog';
+import { MessageService } from 'primeng/api';
+import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { map } from 'rxjs';
-import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-add-employee',
@@ -17,6 +12,27 @@ import { environment } from 'src/environments/environment';
 })
 export class AddEmployeeComponent {
   employeeForm: FormGroup;
+  sportOptions: string[] = [
+    'Badminton Men',
+    'Badminton Women',
+    'Badminton 40+',
+    'Carrom',
+    'Chess',
+    'Cricket',
+    'Dart',
+    'Lagori Men',
+    'Lagori Women',
+    'Net Cricket',
+    'Rink Football',
+    'Slow Cycling Men',
+    'Slow Cycling Women',
+    'Table Tennis Men',
+    'Table Tennis 40+',
+    'Track & Field Men',
+    'Track & Field Women',
+    'Track & Field 40+',
+    'Volleyball',
+  ];
   constructor(
     private ref: DynamicDialogRef,
     public config: DynamicDialogConfig,
@@ -50,7 +66,6 @@ export class AddEmployeeComponent {
       UserCity: [''],
     });
 
-  console.log(this.config.data);
      
 
     if (this.config.data && !this.config.data.id) {
@@ -60,6 +75,12 @@ export class AddEmployeeComponent {
 
     if (this.config.data.id) {
       this.employeeForm.patchValue(this.config.data);
+      // Imported rows can carry a sport name that is not in the list (e.g. "CRICKET");
+      // show it as an option so the select doesn't look empty.
+      const sport = this.config.data.SportName;
+      if (sport && !this.sportOptions.includes(sport)) {
+        this.sportOptions = [sport, ...this.sportOptions];
+      }
     }
 
   }
@@ -75,7 +96,6 @@ export class AddEmployeeComponent {
           })
         )
       .subscribe((res: any) => {
-        console.log(res);
         this.employeeForm.get('UserCity')?.patchValue(res.name);
        
       });

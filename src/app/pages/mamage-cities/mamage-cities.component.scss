@@ -1,0 +1,61 @@
+.cities-page {
+  max-width: 900px;
+}
+
+.form-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.add-btn {
+  font-size: 14px !important;
+  white-space: nowrap;
+}
+
+.list-search {
+  padding: 0.85rem 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.cities-table {
+  th,
+  td {
+    padding: 0.85rem 1rem;
+  }
+
+  tbody tr:last-child td {
+    border-bottom: 0;
+  }
+
+  tbody tr:hover td {
+    background: #f9fafc;
+  }
+}
+
+.sr-col {
+  width: 64px;
+}
+
+.icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@media (max-width: 575.98px) {
+  .cities-table {
+    th,
+    td {
+      padding: 0.75rem 0.6rem;
+    }
+  }
+
+  .sr-col {
+    width: 40px;
+  }
+
+  .add-btn {
+    width: 100%;
+  }
+}

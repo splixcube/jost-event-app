@@ -1,13 +1,13 @@
 <form [formGroup]="employeeForm">
-  <div class="row align-items-center mx-auto">
-    <div class="col-md-6 my-2">
+  <div class="row g-3">
+    <div class="col-md-6">
       <div class="form-floating">
         <input [ngClass]="{'error': getControl('DepartmentName').invalid && getControl('DepartmentName').touched}" autocomplete="off" placeholder="Department Name" class="form-control" type="text" formControlName="DepartmentName"
           id="DepartmentName">
         <label for="DepartmentName">Department Name</label>
       </div>
     </div>
-    <div class="col-md-6 my-2">
+    <div class="col-md-6">
       <div class="form-floating">
 
         <input [ngClass]="{'error': getControl('EmployeeCode').invalid && getControl('EmployeeCode').touched}" autocomplete="off" placeholder="Employee Code" class="form-control" type="text"
@@ -15,7 +15,7 @@
         <label for="EmployeeCode">Employee Code <span class="text-danger">*</span> </label>
       </div>
     </div>
-    <div class="col-md-6 my-2">
+    <div class="col-md-6">
       <div class="form-floating">
 
         <input [ngClass]="{'error': getControl('EmployeeName').invalid && getControl('EmployeeName').touched}" autocomplete="off" id="EmployeeName" placeholder="Employee Name" class="form-control" type="text"
@@ -23,13 +23,13 @@
         <label for="EmployeeName">Employee Name <span class="text-danger">*</span></label>
       </div>
     </div>
-    <div class="col-md-6 my-2">
+    <div class="col-md-6">
       <div  class="form-floating">
         <input [ngClass]="{'error': getControl('MobileNo').invalid && getControl('MobileNo').touched}"   autocomplete="off" id="MobileNo" placeholder="Mobile No." class="form-control " type="number"
           formControlName="MobileNo"> <label for="MobileNo">Mobile no.<span class="text-danger">*</span></label>
       </div>
     </div>
-     <div class="col-md-6 my-2">
+     <div class="col-md-6">
       <div class="form-floating">
 
         <input [ngClass]="{'error': getControl('BusinessUnit').invalid && getControl('BusinessUnit').touched}" autocomplete="off" id="BusinessUnit" placeholder="Business Unit" class="form-control" type="text"
@@ -37,46 +37,18 @@
         <label for="BusinessUnit">Business Unit</label>
       </div>
     </div>
-    <div class="col-md-6 my-2">
+    <div class="col-md-6">
       <div class="form-floating">
-        <select  formControlName="SportName" class="form-control form-select px-2 p-0"
+        <select  formControlName="SportName" class="form-select"
         [ngClass]="{'error': getControl('SportName').invalid && getControl('SportName').touched}"
         id="SportName">
-<option value="" disabled selected>Select Sport Type</option>
-          <option value="Badminton Men" >Badminton Men</option>
-<option value="Badminton Women" >Badminton Women</option>
-<option value="Badminton 40+" >Badminton 40+</option>
-<option value="Carrom" >Carrom</option>
-<option value="Chess" >Chess</option>
-<option value="Cricket" >Cricket</option>
-<option value="Dart" >Dart</option>
-<option value="Lagori Men" >Lagori Men</option>
-<option value="Lagori Women" >Lagori Women</option>
-<option value="Net Cricket" >Net Cricket</option>
-<option value="Rink Football" >Rink Football</option>
-<option value="Slow Cycling Men" >Slow Cycling Men</option>
-<option value="Slow Cycling Women" >Slow Cycling Women</option>
-<option value="Table Tennis Men" >Table Tennis Men</option>
-<option value="Table Tennis 40+" >Table Tennis 40+</option>
-<option value="Track & Field Men" >Track & Field Men</option>
-<option value="Track & Field Women" >Track & Field Women</option>
-<option value="Track & Field 40+" >Track & Field 40+</option>
-<option value="Volleyball" >Volleyball</option>
+<option value="" disabled>Select sport</option>
+          <option *ngFor="let sport of sportOptions" [value]="sport">{{ sport }}</option>
         </select>
-        <!-- <input [ngClass]="{'error': getControl('SportName').invalid && getControl('SportName').touched}" autocomplete="off" id="SportName" placeholder="Sport Name" class="form-control " type="text"
-          formControlName="SportName"> -->
-       <!--  <label for="SportName">Sport Name <span class="text-danger">*</span></label> -->
+        <label for="SportName">Sport Name <span class="text-danger">*</span></label>
       </div>
     </div>
-<!--     <div class="col-md-6 my-2">
-      <div class="form-floating">
-        <input [ngClass]="{'error': getControl('EventName').invalid && getControl('EventName').touched}" autocomplete="off" id="EventName" placeholder="Event Name" class="form-control " type="text"
-          formControlName="EventName">
-
-        <label for="EventName">Event Name</label>
-      </div>
-    </div> -->
-    <div class="col-md-6 my-2">
+    <div class="col-md-6">
       <div class="form-floating">
        <input [ngClass]="{'error': getControl('SportType').invalid && getControl('SportType').touched}" autocomplete="off" id="SportType" placeholder="Sport Type" class="form-control " type="text"
           formControlName="SportType"> 
@@ -84,7 +56,7 @@
         <label for="SportType">Sport Type</label> 
       </div>
     </div>
-    <div class="col-md-6 my-2">
+    <div class="col-md-6">
       <div class="form-floating">
         <input [ngClass]="{'error': getControl('EventId').invalid && getControl('EventId').touched}" autocomplete="off" placeholder="Event Id" class="form-control " id="EventId" type="text"
           formControlName="EventId">
@@ -92,7 +64,7 @@
         <label for="EventId">Event Id</label>
       </div>
     </div>
-    <div class="col-md-6 my-2">
+    <div class="col-md-6">
       <div class="form-floating">
         <input [ngClass]="{'error': getControl('JerseyType').invalid && getControl('JerseyType').touched}" autocomplete="off" placeholder="Jersey Type" id="JerseyType" class="form-control " type="text"
           formControlName="JerseyType">
@@ -100,7 +72,7 @@
         <label for="JerseyType">Jersey Type</label>
       </div>
     </div>
-    <div class="col-md-6 my-2">
+    <div class="col-md-6">
       <div class="form-floating">
         <input [ngClass]="{'error': getControl('JerseySize').invalid && getControl('JerseySize').touched}" autocomplete="off" id="JerseySize" placeholder="Jersey Size" class="form-control " type="text"
           formControlName="JerseySize">
@@ -108,7 +80,7 @@
         <label for="JerseySize">Jersey Size <span class="text-danger">*</span></label>
       </div>
     </div>
-        <div class="col-md-6 my-2">
+        <div class="col-md-6">
       <div class="form-floating">
 
         <input [ngClass]="{'error': getControl('LocationCode').invalid && getControl('LocationCode').touched}" autocomplete="off" id="LocationCode" placeholder="Location Code" class="form-control" type="text"
@@ -116,7 +88,7 @@
         <label for="LocationCode">Location Code</label>
       </div>
     </div>
-    <div class="col-md-6 my-2">
+    <div class="col-md-6">
       <div class="form-floating">
         <input [ngClass]="{'error': getControl('Location').invalid && getControl('Location').touched}" autocomplete="off" id="Location" placeholder="Location" class="form-control " type="text"
           formControlName="Location">
@@ -124,7 +96,7 @@
         <label for="Location">Location</label>
       </div>
     </div>
-       <div class="col-md-6 my-2">
+       <div class="col-md-6">
       <div class="form-floating">
         <input [ngClass]="{'error': getControl('UserCity').invalid && getControl('UserCity').touched}" autocomplete="off" id="UserCity" placeholder="UserCity" class="form-control " type="text"
           formControlName="UserCity">
@@ -132,7 +104,7 @@
         <label for="UserCity">City</label>
       </div>
     </div>
-       <div class="col-md-6 my-2">
+       <div class="col-md-6">
       <div class="form-floating">
         <input [ngClass]="{'error': getControl('State').invalid && getControl('State').touched}" autocomplete="off" id="State" placeholder="State" class="form-control " type="text"
           formControlName="State">
@@ -140,7 +112,7 @@
         <label for="State">State</label>
       </div>
     </div>
-       <div class="col-md-6 my-2">
+       <div class="col-md-6">
       <div class="form-floating">
         <input [ngClass]="{'error': getControl('Region').invalid && getControl('Region').touched}" autocomplete="off" id="Region" placeholder="Region" class="form-control " type="text"
           formControlName="Region">
@@ -148,7 +120,7 @@
         <label for="Region">Region</label>
       </div>
     </div>
-    <div class="col-md-6 my-2">
+    <div class="col-md-6">
       <div class="form-floating">
         <input [ngClass]="{'error': getControl('AppliedDate').invalid && getControl('AppliedDate').touched}" autocomplete="off" id="AppliedDate" placeholder="Applied Date" class="form-control " type="date"
           formControlName="AppliedDate">
@@ -156,7 +128,7 @@
         <label for="AppliedDate">Applied Date</label>
       </div>
     </div>
-    <div class="col-md-6 my-2">
+    <div class="col-md-6">
       <div class="form-floating">
         <input [ngClass]="{'error': getControl('Status').invalid && getControl('Status').touched}" autocomplete="off" id="Status" placeholder="Status" class="form-control " type="text"
           formControlName="Status">
@@ -164,14 +136,14 @@
         <label for="Status">Status</label>
       </div>
     </div>
-    <div class="col-md-6 my-2">
+    <div class="col-md-6">
       <div class="form-floating">
         <input [ngClass]="{'error': getControl('StatusOn').invalid && getControl('StatusOn').touched}" autocomplete="off" id="StatusOn" placeholder="Status On" class="form-control " type="date"
           formControlName="StatusOn">
         <label for="StatusOn">Status on</label>
       </div>
     </div>
-    <div class="col-md-6 my-2">
+    <div class="col-md-6">
       <div class="form-floating">
         <input [ngClass]="{'error': getControl('TeamName').invalid && getControl('TeamName').touched}" autocomplete="off" id="TeamName" placeholder="Team Name" class="form-control " type="text"
           formControlName="TeamName">
@@ -179,10 +151,11 @@
       </div>
     </div>
   </div>
-  <div class="col-md-12 my-2 text-center">
-    <button [disabled]="employeeForm.invalid" class="btn btn-primary my-auto mx-auto " *ngIf="!this.config.data.id"
-      (click)="addEmployee()">Add</button>
-    <button [disabled]="employeeForm.invalid" class="btn btn-primary my-auto mx-auto " *ngIf="this.config.data.id"
+  <div class="form-footer">
+    <small class="text-muted"><span class="text-danger">*</span> Required fields</small>
+    <button [disabled]="employeeForm.invalid" class="btn btn-primary save-btn" *ngIf="!this.config.data.id"
+      (click)="addEmployee()">Add Employee</button>
+    <button [disabled]="employeeForm.invalid" class="btn btn-primary save-btn" *ngIf="this.config.data.id"
       (click)="updateEmployee(this.config.data?.id)">Update</button>
   </div>
 </form>

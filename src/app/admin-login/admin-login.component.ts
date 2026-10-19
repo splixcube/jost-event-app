@@ -34,7 +34,6 @@ export class AdminLoginComponent {
        return;
       }
       else {
-        console.log(data.email,data.password,"3")
         this.toastService.add({severity:'error', summary: 'Error', detail: 'Unable to Login,Please Try again'})
       }
     } catch (err) {

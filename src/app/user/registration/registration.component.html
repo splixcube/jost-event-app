@@ -7,7 +7,8 @@
 
       <div>
         <strong style="font-size:20px">Welcome to JOSH </strong>
-        <p class="text-grey">Please enter your Employee ID to register</p>
+        <p class="text-grey" *ngIf="registrationPage">Please enter your Employee ID to register</p>
+        <p class="text-grey" *ngIf="!registrationPage">Enter OTP received on your mobile number linked with your employee ID</p>
       </div>
       <br>
       <form [formGroup]="registrationForm">
@@ -32,9 +33,6 @@
             <button  class="btn submit-btn my-4" (click)="verifyOtp()">
               <b> VERIFY </b>
             </button>
-            <p class="text-center px-4">
-              <small class="text-light">You will get OTP on your registered mobile number to verify</small>
-            </p>
           </ng-container>
         </div> 
       </form>
